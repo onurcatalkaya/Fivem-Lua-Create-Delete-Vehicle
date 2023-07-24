@@ -13,16 +13,27 @@ RegisterCommand("cv", function(source,args,raw)
 end)
 
 RegisterCommand("dv", function(source, args, raw)
-    local radius = args[1]
-    radius = radius + .0
     local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
-
     if DoesEntityExist(vehicle) then
         DeleteEntity(vehicle)
     else
-        local nearbyVehicle = GetClosestVehicle(GetEntityCoords(PlayerPedId()),radius , 0, 70)
-        if DoesEntityExist(nearbyVehicle) then
-            DeleteEntity(nearbyVehicle)
+        local radius = args[1]
+        local time = 0
+        if radius == nil then
+            local nearbyVehicle = GetClosestVehicle(GetEntityCoords(PlayerPedId()),10.0 , 0, 70)
+            if DoesEntityExist(nearbyVehicle) then
+                DeleteEntity(nearbyVehicle)
+            end
+        else
+            while time ~= 100 do
+                time = time + 1
+                radius = radius + .0
+                local nearbyVehicle = GetClosestVehicle(GetEntityCoords(PlayerPedId()),radius , 0, 70)
+                if DoesEntityExist(nearbyVehicle) then
+                    DeleteEntity(nearbyVehicle)
+                end
+                Citizen.Wait(1)
+            end
         end
     end
 end)
